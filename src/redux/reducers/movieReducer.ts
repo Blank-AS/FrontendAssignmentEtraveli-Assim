@@ -1,6 +1,13 @@
 import { GET_MOVIES, SORT_MOVIES, SEARCH_MOVIES } from "../actions/movieActions";
+import { Movie } from "../../types/movieType";
 
-const initialState = {
+interface MovieState {
+  movies: Movie[];
+  sortType: string;
+  searchQuery: string;
+}
+
+const initialState: MovieState = {
   movies: [],
   sortType: "",
   searchQuery: "",

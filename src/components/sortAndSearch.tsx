@@ -1,68 +1,79 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import { useState } from "react";
 import { useDispatch } from "react-redux";
+import useTheme from "../hooks/useTheme";
 import Select from "react-select";
 import { SORT_MOVIES, SEARCH_MOVIES } from "../redux/actions/movieActions";
-
-const sortAndSearchStyle = css({
-  display: "flex",
-  flexDirection: "row",
-  justifyContent: "space-between",
-  alignItems: "center",
-  paddingLeft: "20px",
-  paddingRight: "20px",
-  height: "10vh",
-});
-
-const selectStyle = css({
-  width: "15%",
-});
-
-const searchStyle = css({
-  width: "75%",
-  height: "4vh",
-  color: "black",
-  backgroundColor: "white",
-  border: "none",
-  borderRadius: "20px",
-  boxShadow: "0px 0px 10px 5px rgba(255, 255, 255, 0.3)",
-  paddingLeft: "30px",
-  paddingRight: "10px",
-});
-
-const switchStyle = css({
-  display: "flex",
-  width: "3%",
-  height: "4vh",
-  backgroundColor: "white",
-  borderRadius: "20px",
-  boxShadow: "0px 0px 10px 5px rgba(255, 255, 255, 0.3)",
-  justifyContent: "center",
-  alignItems: "center",
-  color: "black",
-});
-
-const options = [
-  {
-    label: "Episode",
-    options: [
-      { value: "episode_id_asc", label: "Ascending" },
-      { value: "episode_id_desc", label: "Descending" },
-    ],
-  },
-  { label: "Title", value: "title" },
-  {
-    label: "Release Date",
-    options: [
-      { value: "release_date_asc", label: "Ascending" },
-      { value: "release_date_desc", label: "Descending" },
-    ],
-  },
-];
+import { SET_THEME } from "../redux/actions/themeActions";
 
 const SortAndSearch = () => {
+  const theme = useTheme();
   const dispatch = useDispatch();
+
+  const sortAndSearchStyle = css({
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingLeft: "20px",
+    paddingRight: "20px",
+    height: "10vh",
+  });
+
+  const selectStyle = css({
+    width: "15%",
+  });
+
+  const searchStyle = css({
+    width: "75%",
+    height: "4vh",
+    backgroundColor: theme.backgroundColor,
+    borderRadius: "20px",
+    border: "none",
+    borderColor: "transparent",
+    boxShadow: theme.boxShadow,
+    color: theme.textColor,
+    fontFamily: "inherit",
+    fontSize: "12px",
+    paddingLeft: "30px",
+    paddingRight: "10px",
+    "&:focus": {
+      outline: "none",
+      borderColor: "transparent",
+    },
+  });
+
+  const switchStyle = css({
+    display: "flex",
+    width: "3%",
+    height: "4vh",
+    backgroundColor: theme.backgroundColor,
+    borderRadius: "20px",
+    boxShadow: theme.boxShadow,
+    justifyContent: "center",
+    alignItems: "center",
+    color: theme.textColor,
+    cursor: "pointer",
+    userSelect: "none",
+  });
+
+  const options = [
+    {
+      label: "Episode",
+      options: [
+        { value: "episode_id_asc", label: "Ascending" },
+        { value: "episode_id_desc", label: "Descending" },
+      ],
+    },
+    { label: "Title", value: "title" },
+    {
+      label: "Release Date",
+      options: [
+        { value: "release_date_asc", label: "Ascending" },
+        { value: "release_date_desc", label: "Descending" },
+      ],
+    },
+  ];
 
   type Option = { value: string; label: string };
   type OptionList = { label: string; options: Option[] };
@@ -82,7 +93,57 @@ const SortAndSearch = () => {
     dispatch({ type: SEARCH_MOVIES, payload: event.target.value });
   };
 
-  const [lightMode, setLightMode] = useState(false);
+  const handleThemeChange = () => {
+    dispatch({ type: SET_THEME, payload: !theme.isLightMode });
+  };
+
+  const selectTheme = (mtheme: any) => ({
+    ...mtheme,
+    colors: {
+      ...mtheme.colors,
+      primary50: "gray",
+      primary25: "#cccccc",
+      primary: theme.textColor,
+    },
+  });
+
+  const selectStyles = {
+    control: (baseStyles: any) => ({
+      ...baseStyles,
+      backgroundColor: theme.backgroundColor,
+      border: "none",
+      borderRadius: "20px",
+      boxShadow: theme.boxShadow,
+      cursor: "pointer",
+      fontSize: "12px",
+      height: "4vh",
+      width: "100%",
+    }),
+    menu: (baseStyles: any) => ({
+      ...baseStyles,
+      backgroundColor: theme.backgroundColor,
+      border: "none",
+      borderRadius: "20px",
+      boxShadow: theme.oppositeBoxShadow,
+      padding: "5px",
+      width: "100%",
+    }),
+    option: (baseStyles: any, state: any) => ({
+      ...baseStyles,
+      borderRadius: "10px",
+      color: state.isSelected ? theme.oppositeTextColor : theme.textColor,
+      cursor: "pointer",
+      fontSize: "12px",
+      margin: "3px 0",
+    }),
+    group: (baseStyles: any) => ({
+      ...baseStyles,
+      borderRadius: "15px",
+      boxShadow: theme.oppositeBoxShadow,
+      margin: "10px",
+      padding: "5px",
+    }),
+  };
 
   return (
     <div css={sortAndSearchStyle}>
@@ -92,60 +153,19 @@ const SortAndSearch = () => {
           options={options}
           placeholder="Sort by..."
           isSearchable={false}
-          theme={(theme) => ({
-            ...theme,
-            colors: {
-              ...theme.colors,
-              primary50: "gray",
-              primary25: "#cccccc",
-              primary: "black",
-            },
-          })}
-          styles={{
-            control: (baseStyles) => ({
-              ...baseStyles,
-              boxShadow: "0px 0px 10px 5px rgba(255, 255, 255, 0.3)",
-              borderRadius: "20px",
-              width: "100%",
-              height: "4vh",
-              border: "none",
-              cursor: "pointer",
-              fontSize: "13px",
-            }),
-            menu: (baseStyles) => ({
-              ...baseStyles,
-              boxShadow: "0px 0px 10px 5px rgba(255, 255, 255, 0.3)",
-              borderRadius: "20px",
-              width: "100%",
-              border: "none",
-              padding: "5px",
-            }),
-            option: (baseStyles, state) => ({
-              ...baseStyles,
-              borderRadius: "10px",
-              margin: "3px 0",
-              cursor: "pointer",
-              fontSize: "13px",
-              color: state.isSelected ? "white" : "black",
-            }),
-            group: (baseStyles) => ({
-              ...baseStyles,
-              padding: "5px",
-              margin: "10px",
-              borderRadius: "15px",
-              boxShadow: "0px 0px 10px 5px rgba(0, 0, 0, 0.3)",
-            }),
-          }}
+          theme={selectTheme}
+          styles={selectStyles}
         />
       </div>
       <input
         id="search"
-        type="text"
         css={searchStyle}
-        placeholder="Type to search..."
+        placeholder="Search for movie title..."
         onChange={handleSearchChange}
       />
-      <div css={switchStyle}>{lightMode ? "🌙" : "☀️"}</div>
+      <div css={switchStyle} onClick={handleThemeChange}>
+        {theme.isLightMode ? "🌙" : "☀️"}
+      </div>
     </div>
   );
 };

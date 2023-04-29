@@ -2,18 +2,18 @@
 import { css } from "@emotion/react";
 
 const movieDetailsStyle = css({
+    alignItems: "center",
     display: "flex",
     flexDirection: "column",
-    alignItems: "center",
-    width: "50%",
     height: "100%",
     overflowY: "auto",
-});
+    width: "50%",
+  });
 
 const MovieDetails = () => {
     return (
         <div css={movieDetailsStyle}>
-            <div> Movie Details </div>
+            <h3> Movie Details </h3>
         </div>
     );
 };

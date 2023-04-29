@@ -1,56 +1,11 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import { useEffect } from "react";
+import useTheme from "../hooks/useTheme";
 import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch, RootState } from "../redux/store/store";
 import { getMovies } from "../redux/actions/movieActions";
-
-const moviesListStyle = css({
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  width: "50%",
-  height: "100%",
-  overflowY: "auto",
-});
-
-const movieItemStyle = css({
-  margin: "10px",
-  backgroundColor: "white",
-  color: "black",
-  width: "80%",
-  height: "7vh",
-  borderRadius: "20px",
-  boxShadow: "0px 0px 10px 5px rgba(255, 255, 255, 0.3)",
-  display: "flex",
-  flexDirection: "row",
-  alignItems: "center",
-  justifyContent: "flex-start",
-  padding: "0 20px",
-});
-
-const episodeNumberStyle = css({
-  fontSize: "12px",
-  opacity: "0.5",
-});
-
-const titleStyle = css({
-  fontSize: "15px",
-  fontWeight: "bold",
-  marginLeft: "15px",
-});
-
-const dateStyle = css({
-  fontSize: "12px",
-  opacity: "0.8",
-  marginLeft: "auto",
-});
-
-interface Movie {
-  episode_id: number;
-  title: string;
-  release_date: string;
-}
+import { Movie } from "../types/movieType";
 
 const toRoman = (num: number): string => {
   if (num < 1 || num > 3999) {
@@ -88,6 +43,7 @@ const toRoman = (num: number): string => {
 };
 
 const MoviesList = () => {
+  const theme = useTheme();
   const appDispatch = useDispatch<AppDispatch>();
   const movies: Movie[] = useSelector(
     (state: RootState) => state.movieReducer.movies
@@ -98,6 +54,51 @@ const MoviesList = () => {
   const searchQuery: string = useSelector(
     (state: RootState) => state.movieReducer.searchQuery
   );
+
+  const combineEpisodeAndTitle = (movie: Movie): string => {
+    return `Episode ${toRoman(movie.episode_id)} - ${movie.title}`;
+  };
+
+  const moviesListStyle = css({
+    alignItems: "center",
+    display: "flex",
+    flexDirection: "column",
+    height: "100%",
+    overflowY: "auto",
+    width: "50%",
+  });
+
+  const movieItemStyle = css({
+    alignItems: "center",
+    backgroundColor: theme.backgroundColor,
+    borderRadius: "20px",
+    boxShadow: theme.boxShadow,
+    color: theme.textColor,
+    display: "flex",
+    flexDirection: "row",
+    height: "7vh",
+    justifyContent: "flex-start",
+    margin: "10px",
+    padding: "0 20px",
+    width: "80%",
+  });
+
+  const episodeNumberStyle = css({
+    fontSize: "12px",
+    opacity: "0.5",
+  });
+
+  const titleStyle = css({
+    fontSize: "15px",
+    fontWeight: "bold",
+    marginLeft: "15px",
+  });
+
+  const dateStyle = css({
+    fontSize: "12px",
+    marginLeft: "auto",
+    opacity: "0.8",
+  });
 
   const sortedAndFilteredMovies = (
     movies: Movie[],
@@ -142,15 +143,13 @@ const MoviesList = () => {
 
   return (
     <div css={moviesListStyle}>
-      Movies List
+      <h3 css={{ color: theme.oppositeTextColor }}> Movies List </h3>
       {sortedAndFilteredMovies(movies, sortType, searchQuery).map(
         (movie: Movie, index: number) => {
           return (
             <div css={movieItemStyle} key={index}>
               <div css={episodeNumberStyle}> Episode {movie.episode_id} </div>
-              <div css={titleStyle}>
-                Episode {toRoman(movie.episode_id)} - {movie.title}
-              </div>
+              <div css={titleStyle}>{combineEpisodeAndTitle(movie)}</div>
               <div css={dateStyle}> {movie.release_date} </div>
             </div>
           );
