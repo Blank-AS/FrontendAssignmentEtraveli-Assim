@@ -8,6 +8,7 @@ const useTheme = () => {
 
   const lightTheme = {
     isLightMode: true,
+    appBackgroundColor: "white",
     backgroundColor: "black",
     textColor: "white",
     oppositeTextColor: "black",
@@ -17,6 +18,7 @@ const useTheme = () => {
 
   const darkTheme = {
     isLightMode: false,
+    appBackgroundColor: "black",
     backgroundColor: "white",
     textColor: "black",
     oppositeTextColor: "white",

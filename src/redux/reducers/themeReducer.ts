@@ -5,7 +5,7 @@ interface ThemeState {
 }
 
 const initialState: ThemeState = {
-  isLightMode: false,
+  isLightMode: JSON.parse(localStorage.getItem("isLightMode") || "false"),
 };
 
 const themeReducer = (state = initialState, action: { type: string; payload: any }) => {

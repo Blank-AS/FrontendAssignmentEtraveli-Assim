@@ -1,50 +1,17 @@
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
+import { css, keyframes } from "@emotion/react";
 import { useEffect } from "react";
 import useTheme from "../hooks/useTheme";
 import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch, RootState } from "../redux/store/store";
-import { getMovies } from "../redux/actions/movieActions";
+import { getMovies, selectMovie } from "../redux/actions/movieActions";
 import { Movie } from "../types/movieType";
-
-const toRoman = (num: number): string => {
-  if (num < 1 || num > 3999) {
-    throw new Error(
-      "The number must be between 1 and 3999, since the Romans didn't have a symbol for 0 or a combination of symbols for numbers greater than 3999."
-    );
-  }
-
-  const romanSymbols: [number, string][] = [
-    [1000, "M"],
-    [900, "CM"],
-    [500, "D"],
-    [400, "CD"],
-    [100, "C"],
-    [90, "XC"],
-    [50, "L"],
-    [40, "XL"],
-    [10, "X"],
-    [9, "IX"],
-    [5, "V"],
-    [4, "IV"],
-    [1, "I"],
-  ];
-
-  let roman: string = "";
-
-  for (const [value, symbol] of romanSymbols) {
-    while (num >= value) {
-      roman += symbol;
-      num -= value;
-    }
-  }
-
-  return roman;
-};
+import toRoman from "../shared/toRoman";
 
 const MoviesList = () => {
   const theme = useTheme();
   const appDispatch = useDispatch<AppDispatch>();
+
   const movies: Movie[] = useSelector(
     (state: RootState) => state.movieReducer.movies
   );
@@ -54,10 +21,9 @@ const MoviesList = () => {
   const searchQuery: string = useSelector(
     (state: RootState) => state.movieReducer.searchQuery
   );
-
-  const combineEpisodeAndTitle = (movie: Movie): string => {
-    return `Episode ${toRoman(movie.episode_id)} - ${movie.title}`;
-  };
+  const loadingList: boolean = useSelector(
+    (state: RootState) => state.movieReducer.loadingList
+  );
 
   const moviesListStyle = css({
     alignItems: "center",
@@ -81,6 +47,8 @@ const MoviesList = () => {
     margin: "10px",
     padding: "0 20px",
     width: "80%",
+    cursor: "pointer",
+    userSelect: "none",
   });
 
   const episodeNumberStyle = css({
@@ -98,6 +66,29 @@ const MoviesList = () => {
     fontSize: "12px",
     marginLeft: "auto",
     opacity: "0.8",
+  });
+
+  const spin = keyframes`
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+`;
+
+  const loadingCircleStyle = css({
+    width: "50px",
+    height: "50px",
+    margin: "20px",
+    border: "3px solid",
+    borderColor: theme.textColor,
+    borderTop: "3px solid",
+    borderTopColor: theme.oppositeTextColor,
+    borderLeft: "3px solid",
+    borderLeftColor: theme.oppositeTextColor,
+    borderRadius: "50%",
+    animation: `${spin} 1s linear infinite`,
   });
 
   const sortedAndFilteredMovies = (
@@ -137,6 +128,10 @@ const MoviesList = () => {
     return sortedMovies;
   };
 
+  const handleSelectMovie = (movieUrl: string) => {
+    appDispatch(selectMovie(movieUrl));
+  };
+
   useEffect(() => {
     appDispatch(getMovies());
   }, [appDispatch]);
@@ -144,16 +139,20 @@ const MoviesList = () => {
   return (
     <div css={moviesListStyle}>
       <h3 css={{ color: theme.oppositeTextColor }}> Movies List </h3>
-      {sortedAndFilteredMovies(movies, sortType, searchQuery).map(
-        (movie: Movie, index: number) => {
-          return (
-            <div css={movieItemStyle} key={index}>
-              <div css={episodeNumberStyle}> Episode {movie.episode_id} </div>
-              <div css={titleStyle}>{combineEpisodeAndTitle(movie)}</div>
-              <div css={dateStyle}> {movie.release_date} </div>
-            </div>
-          );
-        }
+      {loadingList ? (
+        <div css={loadingCircleStyle}> </div>
+        ) : (
+        sortedAndFilteredMovies(movies, sortType, searchQuery).map(
+          (movie: Movie) => {
+            return (
+              <div css={movieItemStyle} key={movie.episode_id} onClick={() => handleSelectMovie(movie.url)}>
+                <div css={episodeNumberStyle}> Episode {movie.episode_id} </div>
+                <div css={titleStyle}>Episode {toRoman(movie.episode_id)} - {movie.title}</div>
+                <div css={dateStyle}> {movie.release_date} </div>
+              </div>
+            );
+          }
+        )
       )}
     </div>
   );

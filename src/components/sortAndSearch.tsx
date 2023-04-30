@@ -5,6 +5,8 @@ import useTheme from "../hooks/useTheme";
 import Select from "react-select";
 import { SORT_MOVIES, SEARCH_MOVIES } from "../redux/actions/movieActions";
 import { SET_THEME } from "../redux/actions/themeActions";
+import darkModeIcon from "../assets/darkModeIcon.svg";
+import lightModeIcon from "../assets/lightModeIcon.svg";
 
 const SortAndSearch = () => {
   const theme = useTheme();
@@ -45,10 +47,10 @@ const SortAndSearch = () => {
 
   const switchStyle = css({
     display: "flex",
-    width: "3%",
-    height: "4vh",
+    width: "40px",
+    height: "40px",
     backgroundColor: theme.backgroundColor,
-    borderRadius: "20px",
+    borderRadius: "50%",
     boxShadow: theme.boxShadow,
     justifyContent: "center",
     alignItems: "center",
@@ -86,6 +88,8 @@ const SortAndSearch = () => {
     // value from the second dropdown
     else if (event && "options" in event) {
       dispatch({ type: SORT_MOVIES, payload: event.options[0].value });
+    } else if (event === null) {
+      dispatch({ type: SORT_MOVIES, payload: "" });
     }
   };
 
@@ -94,6 +98,7 @@ const SortAndSearch = () => {
   };
 
   const handleThemeChange = () => {
+    localStorage.setItem("isLightMode", JSON.stringify(!theme.isLightMode));
     dispatch({ type: SET_THEME, payload: !theme.isLightMode });
   };
 
@@ -143,6 +148,10 @@ const SortAndSearch = () => {
       margin: "10px",
       padding: "5px",
     }),
+    singleValue: (baseStyles: any) => ({
+      ...baseStyles,
+      color: theme.textColor,
+    }),
   };
 
   return (
@@ -155,6 +164,7 @@ const SortAndSearch = () => {
           isSearchable={false}
           theme={selectTheme}
           styles={selectStyles}
+          isClearable={true}
         />
       </div>
       <input
@@ -164,7 +174,14 @@ const SortAndSearch = () => {
         onChange={handleSearchChange}
       />
       <div css={switchStyle} onClick={handleThemeChange}>
-        {theme.isLightMode ? "🌙" : "☀️"}
+        <img
+          src={theme.isLightMode ? darkModeIcon : lightModeIcon}
+          alt={
+            theme.isLightMode ? "Switch to dark mode" : "Switch to light mode"
+          }
+          width="20"
+          height="20"
+        />
       </div>
     </div>
   );
