@@ -13,10 +13,11 @@ const App = () => {
     display: "flex",
     flexDirection: "column",
     minHeight: "100vh",
-    // overflow: "hidden",
+    overflow: "hidden",
   });
 
   const parentStyle = css({
+    overflow: "hidden",
     display: "flex",
     flex: 1,
   });

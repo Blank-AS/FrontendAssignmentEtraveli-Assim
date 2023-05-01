@@ -7,6 +7,7 @@ import { SORT_MOVIES, SEARCH_MOVIES } from "../redux/actions/movieActions";
 import { SET_THEME } from "../redux/actions/themeActions";
 import darkModeIcon from "../assets/darkModeIcon.svg";
 import lightModeIcon from "../assets/lightModeIcon.svg";
+import closeIcon from "../assets/closeIcon.svg";
 
 const SortAndSearch = () => {
   const theme = useTheme();
@@ -28,7 +29,8 @@ const SortAndSearch = () => {
 
   const searchStyle = css({
     width: "75%",
-    height: "4vh",
+    minHeight: "4.5vh",
+    height: "4.5vh",
     backgroundColor: theme.backgroundColor,
     borderRadius: "20px",
     border: "none",
@@ -39,6 +41,7 @@ const SortAndSearch = () => {
     fontSize: "12px",
     paddingLeft: "30px",
     paddingRight: "10px",
+    userSelect: "none",
     "&:focus": {
       outline: "none",
       borderColor: "transparent",
@@ -60,6 +63,13 @@ const SortAndSearch = () => {
   });
 
   const options = [
+    {
+      label: "Episode",
+      options: [
+        { value: "episode_id_asc", label: "Ascending" },
+        { value: "episode_id_desc", label: "Descending" },
+      ],
+    },
     {
       label: "Episode",
       options: [
@@ -121,8 +131,10 @@ const SortAndSearch = () => {
       boxShadow: theme.boxShadow,
       cursor: "pointer",
       fontSize: "12px",
-      height: "4vh",
       width: "100%",
+      minHeight: "4.5vh",
+      height: "4.5vh",
+      userSelect: "none",
     }),
     menu: (baseStyles: any) => ({
       ...baseStyles,
@@ -132,6 +144,21 @@ const SortAndSearch = () => {
       boxShadow: theme.oppositeBoxShadow,
       padding: "5px",
       width: "100%",
+      minHeight: "50%",
+    }),
+    menuList: (baseStyles: any) => ({
+      ...baseStyles,
+      minHeight: "50%",
+      '::-webkit-scrollbar': {
+        width: '0.6vw',
+      },
+      '::-webkit-scrollbar-track': {
+        display: theme.backgroundColor,
+      },
+      '::-webkit-scrollbar-thumb': {
+        borderRadius: '10px',
+        backgroundColor: '#cccccc',
+      },
     }),
     option: (baseStyles: any, state: any) => ({
       ...baseStyles,

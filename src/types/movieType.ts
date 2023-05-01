@@ -3,11 +3,22 @@ export interface Movie {
   title: string;
   release_date: string;
   url: string;
-}
-
-export interface MovieDetails extends Movie {
   opening_crawl: string;
-  created: string;
   director: string;
   producer: string;
+  extraDetails: ExtraDetails;
+  imdbRating: number;
+  rottenTomatoesRating: number;
+  metacriticRating: number;
+  averageRating: number;
+}
+
+export interface ExtraDetails {
+  Genre: string;
+  Plot: string;
+  Actors: string;
+  Awards: string;
+  BoxOffice: string;
+  Runtime: string;
+  Poster: string;
 }

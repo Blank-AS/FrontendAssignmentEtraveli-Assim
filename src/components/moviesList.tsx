@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { css, keyframes } from "@emotion/react";
+import { css } from "@emotion/react";
 import { useEffect } from "react";
 import useTheme from "../hooks/useTheme";
 import { useSelector, useDispatch } from "react-redux";
@@ -7,6 +7,8 @@ import { AppDispatch, RootState } from "../redux/store/store";
 import { getMovies, selectMovie } from "../redux/actions/movieActions";
 import { Movie } from "../types/movieType";
 import toRoman from "../shared/toRoman";
+import loadingCircle from "../styles/loadingCircle";
+import starsRating from "../styles/starsRating";
 
 const MoviesList = () => {
   const theme = useTheme();
@@ -32,6 +34,7 @@ const MoviesList = () => {
     height: "100%",
     overflowY: "auto",
     width: "50%",
+    maxHeight: "85vh",
   });
 
   const movieItemStyle = css({
@@ -46,7 +49,7 @@ const MoviesList = () => {
     justifyContent: "flex-start",
     margin: "10px",
     padding: "0 20px",
-    width: "80%",
+    width: "85%",
     cursor: "pointer",
     userSelect: "none",
   });
@@ -54,41 +57,27 @@ const MoviesList = () => {
   const episodeNumberStyle = css({
     fontSize: "12px",
     opacity: "0.5",
+    width: "15%",
   });
 
   const titleStyle = css({
     fontSize: "15px",
     fontWeight: "bold",
-    marginLeft: "15px",
+    margin: "0 5px",
+    width: "40%",
+  });
+
+  const ratingStyle = css({
+    marginLeft: "auto",
+    marginRight: "10px",
+    width: "30%",
   });
 
   const dateStyle = css({
     fontSize: "12px",
+    width: "15%",
     marginLeft: "auto",
     opacity: "0.8",
-  });
-
-  const spin = keyframes`
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-`;
-
-  const loadingCircleStyle = css({
-    width: "50px",
-    height: "50px",
-    margin: "20px",
-    border: "3px solid",
-    borderColor: theme.textColor,
-    borderTop: "3px solid",
-    borderTopColor: theme.oppositeTextColor,
-    borderLeft: "3px solid",
-    borderLeftColor: theme.oppositeTextColor,
-    borderRadius: "50%",
-    animation: `${spin} 1s linear infinite`,
   });
 
   const sortedAndFilteredMovies = (
@@ -128,8 +117,8 @@ const MoviesList = () => {
     return sortedMovies;
   };
 
-  const handleSelectMovie = (movieUrl: string) => {
-    appDispatch(selectMovie(movieUrl));
+  const handleSelectMovie = (movie: Movie) => {
+    appDispatch(selectMovie(movie));
   };
 
   useEffect(() => {
@@ -140,14 +129,22 @@ const MoviesList = () => {
     <div css={moviesListStyle}>
       <h3 css={{ color: theme.oppositeTextColor }}> Movies List </h3>
       {loadingList ? (
-        <div css={loadingCircleStyle}> </div>
-        ) : (
+        <div css={loadingCircle(theme.textColor, theme.oppositeTextColor)}>
+        </div>
+      ) : (
         sortedAndFilteredMovies(movies, sortType, searchQuery).map(
           (movie: Movie) => {
             return (
-              <div css={movieItemStyle} key={movie.episode_id} onClick={() => handleSelectMovie(movie.url)}>
+              <div
+                css={movieItemStyle}
+                key={movie.episode_id}
+                onClick={() => handleSelectMovie(movie)}
+              >
                 <div css={episodeNumberStyle}> Episode {movie.episode_id} </div>
-                <div css={titleStyle}>Episode {toRoman(movie.episode_id)} - {movie.title}</div>
+                <div css={titleStyle}>
+                  Episode {toRoman(movie.episode_id)} - {movie.title}
+                </div>
+                <div css={ratingStyle}> {starsRating("", movie.averageRating)}</div>
                 <div css={dateStyle}> {movie.release_date} </div>
               </div>
             );

@@ -1,5 +1,5 @@
 import { GET_MOVIES, SORT_MOVIES, SEARCH_MOVIES, SELECT_MOVIE } from "../actions/movieActions";
-import { Movie, MovieDetails } from "../../types/movieType";
+import { Movie } from "../../types/movieType";
 
 interface MovieState {
   movies: Movie[];
@@ -7,7 +7,7 @@ interface MovieState {
   searchQuery: string;
   loadingList: boolean;
   loadingDetails: boolean;
-  selectedMovie: MovieDetails | null;
+  selectedMovie: Movie | null;
 }
 
 const initialState: MovieState = {
@@ -28,7 +28,7 @@ const movieReducer = (state = initialState, action: { type: string; payload: any
     case SEARCH_MOVIES:
       return { ...state, searchQuery: action.payload };
     case SELECT_MOVIE:
-      return { ...state, selectedMovie: action.payload, loadingDetails: false };
+      return { ...state, selectedMovie: action.payload};
     default:
       return state;
   }
