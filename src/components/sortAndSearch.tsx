@@ -7,7 +7,7 @@ import { SORT_MOVIES, SEARCH_MOVIES } from "../redux/actions/movieActions";
 import { SET_THEME } from "../redux/actions/themeActions";
 import darkModeIcon from "../assets/darkModeIcon.svg";
 import lightModeIcon from "../assets/lightModeIcon.svg";
-import closeIcon from "../assets/closeIcon.svg";
+import searchIcon from "../assets/searchIcon.svg";
 
 const SortAndSearch = () => {
   const theme = useTheme();
@@ -24,11 +24,11 @@ const SortAndSearch = () => {
   });
 
   const selectStyle = css({
-    width: "15%",
+    width: "20%",
   });
 
   const searchStyle = css({
-    width: "75%",
+    width: "95%",
     minHeight: "4.5vh",
     height: "4.5vh",
     backgroundColor: theme.backgroundColor,
@@ -46,6 +46,20 @@ const SortAndSearch = () => {
       outline: "none",
       borderColor: "transparent",
     },
+  });
+
+  const searchWrapperStyle = css({
+    position: "relative",
+    width: "75%",
+  });
+
+  const searchIconStyle = css({
+    position: "absolute",
+    marginLeft: "7px",
+    transform: "translateY(50%)",
+    width: "20px",
+    height: "20px",
+    userSelect: "none",
   });
 
   const switchStyle = css({
@@ -71,18 +85,24 @@ const SortAndSearch = () => {
       ],
     },
     {
-      label: "Episode",
+      label: "Title",
       options: [
-        { value: "episode_id_asc", label: "Ascending" },
-        { value: "episode_id_desc", label: "Descending" },
+        { value: "title_asc", label: "Ascending" },
+        { value: "title_desc", label: "Descending" },
       ],
     },
-    { label: "Title", value: "title" },
     {
       label: "Release Date",
       options: [
         { value: "release_date_asc", label: "Ascending" },
         { value: "release_date_desc", label: "Descending" },
+      ],
+    },
+    {
+      label: "Rating",
+      options: [
+        { value: "rating_asc", label: "Ascending" },
+        { value: "rating_desc", label: "Descending" },
       ],
     },
   ];
@@ -142,22 +162,26 @@ const SortAndSearch = () => {
       border: "none",
       borderRadius: "20px",
       boxShadow: theme.oppositeBoxShadow,
-      padding: "5px",
+      padding: "7px",
       width: "100%",
       minHeight: "50%",
+      
     }),
     menuList: (baseStyles: any) => ({
       ...baseStyles,
       minHeight: "50%",
-      '::-webkit-scrollbar': {
-        width: '0.6vw',
+      "::-webkit-scrollbar": {
+        width: "0.6vw",
       },
-      '::-webkit-scrollbar-track': {
+      "::-webkit-scrollbar-track": {
         display: theme.backgroundColor,
       },
-      '::-webkit-scrollbar-thumb': {
-        borderRadius: '10px',
-        backgroundColor: '#cccccc',
+      "::-webkit-scrollbar-thumb": {
+        borderRadius: "10px",
+        backgroundColor: "#cccccc",
+      },
+      "&::-webkit-scrollbar-thumb:hover": {
+        backgroundColor: "#555",
       },
     }),
     option: (baseStyles: any, state: any) => ({
@@ -166,7 +190,7 @@ const SortAndSearch = () => {
       color: state.isSelected ? theme.oppositeTextColor : theme.textColor,
       cursor: "pointer",
       fontSize: "12px",
-      margin: "3px 0",
+      margin: "4px 0",
     }),
     group: (baseStyles: any) => ({
       ...baseStyles,
@@ -181,6 +205,16 @@ const SortAndSearch = () => {
     }),
   };
 
+  const formatOptionLabel = (data: any, { context }: any) => {
+    if (context === "menu") {
+      return data.label;
+    }
+    return `${
+      data.value.split("_")[0].charAt(0).toUpperCase() +
+      data.value.split("_")[0].slice(1)
+    } ${data.label}`;
+  };
+
   return (
     <div css={sortAndSearchStyle}>
       <div css={selectStyle}>
@@ -192,14 +226,18 @@ const SortAndSearch = () => {
           theme={selectTheme}
           styles={selectStyles}
           isClearable={true}
+          formatOptionLabel={formatOptionLabel}
         />
       </div>
-      <input
-        id="search"
-        css={searchStyle}
-        placeholder="Search for movie title..."
-        onChange={handleSearchChange}
-      />
+      <div css={searchWrapperStyle}>
+        <img src={searchIcon} alt="Search" css={searchIconStyle} />
+        <input
+          id="search"
+          css={searchStyle}
+          placeholder="Search for movie title..."
+          onChange={handleSearchChange}
+        />
+      </div>
       <div css={switchStyle} onClick={handleThemeChange}>
         <img
           src={theme.isLightMode ? darkModeIcon : lightModeIcon}

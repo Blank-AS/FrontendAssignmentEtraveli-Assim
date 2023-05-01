@@ -26,6 +26,9 @@ const MoviesList = () => {
   const loadingList: boolean = useSelector(
     (state: RootState) => state.movieReducer.loadingList
   );
+  const selectedMovie: Movie | null = useSelector(
+    (state: RootState) => state.movieReducer.selectedMovie
+  );
 
   const moviesListStyle = css({
     alignItems: "center",
@@ -48,23 +51,28 @@ const MoviesList = () => {
     height: "7vh",
     justifyContent: "flex-start",
     margin: "10px",
-    padding: "0 20px",
+    padding: "5px 20px",
     width: "85%",
     cursor: "pointer",
     userSelect: "none",
+    transition: "transform 0.3s ease-in-out",
+    "&:hover": {
+      transform: "scale(0.85)",
+    },
   });
 
   const episodeNumberStyle = css({
     fontSize: "12px",
     opacity: "0.5",
-    width: "15%",
+    width: "14%",
   });
 
   const titleStyle = css({
-    fontSize: "15px",
+    letterSpacing: "-0.5px",
+    fontSize: "12px",
     fontWeight: "bold",
     margin: "0 5px",
-    width: "40%",
+    width: "45%",
   });
 
   const ratingStyle = css({
@@ -78,6 +86,15 @@ const MoviesList = () => {
     width: "15%",
     marginLeft: "auto",
     opacity: "0.8",
+  });
+
+  const activeItemStyle = css({
+    backgroundColor: theme.appBackgroundColor,
+    color: theme.oppositeTextColor,
+    transform: "scale(0.95)",
+    "&:hover": {
+      transform: "scale(0.95)",
+    },
   });
 
   const sortedAndFilteredMovies = (
@@ -97,8 +114,10 @@ const MoviesList = () => {
           return a.episode_id - b.episode_id;
         case "episode_id_desc":
           return b.episode_id - a.episode_id;
-        case "title":
+        case "title_asc":
           return a.title.localeCompare(b.title);
+        case "title_desc":
+          return b.title.localeCompare(a.title);
         case "release_date_asc":
           return (
             new Date(a.release_date).getTime() -
@@ -109,6 +128,10 @@ const MoviesList = () => {
             new Date(b.release_date).getTime() -
             new Date(a.release_date).getTime()
           );
+        case "rating_asc":
+          return a.averageRating - b.averageRating;
+        case "rating_desc":
+          return b.averageRating - a.averageRating;
         default:
           return 0;
       }
@@ -129,14 +152,18 @@ const MoviesList = () => {
     <div css={moviesListStyle}>
       <h3 css={{ color: theme.oppositeTextColor }}> Movies List </h3>
       {loadingList ? (
-        <div css={loadingCircle(theme.textColor, theme.oppositeTextColor)}>
-        </div>
+        <div
+          css={loadingCircle(theme.textColor, theme.oppositeTextColor)}
+        ></div>
       ) : (
         sortedAndFilteredMovies(movies, sortType, searchQuery).map(
           (movie: Movie) => {
             return (
               <div
-                css={movieItemStyle}
+                css={[
+                  movieItemStyle,
+                  selectedMovie?.episode_id === movie.episode_id && activeItemStyle,
+                ]}
                 key={movie.episode_id}
                 onClick={() => handleSelectMovie(movie)}
               >
@@ -144,7 +171,10 @@ const MoviesList = () => {
                 <div css={titleStyle}>
                   Episode {toRoman(movie.episode_id)} - {movie.title}
                 </div>
-                <div css={ratingStyle}> {starsRating("", movie.averageRating)}</div>
+                <div css={ratingStyle}>
+                  {" "}
+                  {starsRating("", movie.averageRating)}
+                </div>
                 <div css={dateStyle}> {movie.release_date} </div>
               </div>
             );

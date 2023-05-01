@@ -13,6 +13,7 @@ const starsRatingStyle = css({
 const starsStyle = css({
   height: "15px",
   width: "15px",
+  userSelect: "none",
 });
 
 const starsRating = (preText: string, averageRating: number) => (
