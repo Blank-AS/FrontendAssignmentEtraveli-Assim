@@ -8,6 +8,7 @@ const starsRatingStyle = css({
   flexDirection: "row",
   justifyContent: "space-between",
   alignItems: "center",
+  fontSize: "14px",
 });
 
 const starsStyle = css({
@@ -16,10 +17,10 @@ const starsStyle = css({
   userSelect: "none",
 });
 
-const starsRating = (preText: string, averageRating: number) => (
+const StarsRating = (props : {preText: string, averageRating: number}) => (
   <div css={starsRatingStyle}>
-    <strong>{preText}</strong>
-    {Array.from({ length: averageRating }, (_, i) => (
+    <strong>{props.preText}</strong>
+    {Array.from({ length: props.averageRating }, (_, i) => (
       <img
         key={`filled-${i}`}
         src={fillStarIcon}
@@ -27,7 +28,7 @@ const starsRating = (preText: string, averageRating: number) => (
         css={starsStyle}
       />
     ))}
-    {Array.from({ length: 10 - averageRating }, (_, i) => (
+    {Array.from({ length: 10 - props.averageRating }, (_, i) => (
       <img
         key={`empty-${i}`}
         src={starIcon}
@@ -38,4 +39,4 @@ const starsRating = (preText: string, averageRating: number) => (
   </div>
 );
 
-export default starsRating;
+export default StarsRating;

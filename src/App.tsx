@@ -1,30 +1,18 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import MoviesList from "./components/moviesList";
-import MovieDetails from "./components/movieDetails";
-import SortAndSearch from "./components/sortAndSearch";
+import MoviesList from "./components/MoviesList";
+import MovieDetails from "./components/MovieDetails";
+import SortAndSearch from "./components/SortAndSearch";
 import useTheme from "./hooks/useTheme";
+import { appStyle, parentStyle, separatorStyle } from "./styles/App.styles";
 
 const App = () => {
   const theme = useTheme();
 
-  const appStyle = css({
-    backgroundColor: theme.appBackgroundColor,
-    display: "flex",
-    flexDirection: "column",
-    minHeight: "100vh",
-    overflow: "hidden",
-  });
-
-  const parentStyle = css({
-    overflow: "hidden",
-    display: "flex",
-    flex: 1,
-  });
-
   return (
-    <div css={appStyle}>
+    <div css={appStyle(theme)}>
       <SortAndSearch />
+      <hr css={separatorStyle} />
       <div css={parentStyle}>
         <MoviesList />
         <MovieDetails />

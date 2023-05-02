@@ -1,5 +1,4 @@
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
 import { useEffect } from "react";
 import useTheme from "../hooks/useTheme";
 import { useSelector, useDispatch } from "react-redux";
@@ -8,7 +7,16 @@ import { getMovies, selectMovie } from "../redux/actions/movieActions";
 import { Movie } from "../types/movieType";
 import toRoman from "../shared/toRoman";
 import loadingCircle from "../styles/loadingCircle";
-import starsRating from "../styles/starsRating";
+import StarsRating from "../styles/StarsRating";
+import {
+  moviesListStyle,
+  movieItemStyle,
+  episodeNumberStyle,
+  titleStyle,
+  ratingStyle,
+  dateStyle,
+  activeItemStyle,
+} from "../styles/MoviesList.styles";
 
 const MoviesList = () => {
   const theme = useTheme();
@@ -29,73 +37,6 @@ const MoviesList = () => {
   const selectedMovie: Movie | null = useSelector(
     (state: RootState) => state.movieReducer.selectedMovie
   );
-
-  const moviesListStyle = css({
-    alignItems: "center",
-    display: "flex",
-    flexDirection: "column",
-    height: "100%",
-    overflowY: "auto",
-    width: "50%",
-    maxHeight: "85vh",
-  });
-
-  const movieItemStyle = css({
-    alignItems: "center",
-    backgroundColor: theme.backgroundColor,
-    borderRadius: "20px",
-    boxShadow: theme.boxShadow,
-    color: theme.textColor,
-    display: "flex",
-    flexDirection: "row",
-    height: "7vh",
-    justifyContent: "flex-start",
-    margin: "10px",
-    padding: "5px 20px",
-    width: "85%",
-    cursor: "pointer",
-    userSelect: "none",
-    transition: "transform 0.3s ease-in-out",
-    "&:hover": {
-      transform: "scale(0.85)",
-    },
-  });
-
-  const episodeNumberStyle = css({
-    fontSize: "12px",
-    opacity: "0.5",
-    width: "14%",
-  });
-
-  const titleStyle = css({
-    letterSpacing: "-0.5px",
-    fontSize: "12px",
-    fontWeight: "bold",
-    margin: "0 5px",
-    width: "45%",
-  });
-
-  const ratingStyle = css({
-    marginLeft: "auto",
-    marginRight: "10px",
-    width: "30%",
-  });
-
-  const dateStyle = css({
-    fontSize: "12px",
-    width: "15%",
-    marginLeft: "auto",
-    opacity: "0.8",
-  });
-
-  const activeItemStyle = css({
-    backgroundColor: theme.appBackgroundColor,
-    color: theme.oppositeTextColor,
-    transform: "scale(0.95)",
-    "&:hover": {
-      transform: "scale(0.95)",
-    },
-  });
 
   const sortedAndFilteredMovies = (
     movies: Movie[],
@@ -141,6 +82,7 @@ const MoviesList = () => {
   };
 
   const handleSelectMovie = (movie: Movie) => {
+    localStorage.setItem("selectedMovie", JSON.stringify(movie));
     appDispatch(selectMovie(movie));
   };
 
@@ -161,8 +103,9 @@ const MoviesList = () => {
             return (
               <div
                 css={[
-                  movieItemStyle,
-                  selectedMovie?.episode_id === movie.episode_id && activeItemStyle,
+                  movieItemStyle(theme),
+                  selectedMovie?.episode_id === movie.episode_id &&
+                    activeItemStyle(theme),
                 ]}
                 key={movie.episode_id}
                 onClick={() => handleSelectMovie(movie)}
@@ -172,8 +115,7 @@ const MoviesList = () => {
                   Episode {toRoman(movie.episode_id)} - {movie.title}
                 </div>
                 <div css={ratingStyle}>
-                  {" "}
-                  {starsRating("", movie.averageRating)}
+                  <StarsRating preText="" averageRating={movie.averageRating} />
                 </div>
                 <div css={dateStyle}> {movie.release_date} </div>
               </div>

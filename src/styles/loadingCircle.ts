@@ -9,7 +9,7 @@ export const spin = keyframes`
   }
 `;
 
-const loadingCircleStyle = (borderColor: string, sidesBoderColor: string) => css({
+const loadingCircle = (borderColor: string, sidesBoderColor: string) => css({
   width: "50px",
   height: "50px",
   margin: "20px",
@@ -23,4 +23,4 @@ const loadingCircleStyle = (borderColor: string, sidesBoderColor: string) => css
   animation: `${spin} 1s linear infinite`,
 });
 
-export default loadingCircleStyle;
+export default loadingCircle;

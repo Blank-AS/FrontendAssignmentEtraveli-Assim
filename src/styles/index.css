@@ -1,14 +1,26 @@
-:root {
+body, html {
+  margin: 0;
+  padding: 0;
+  padding-bottom: 10px;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     Liberation Mono, Courier New, monospace;
 
   color: rgba(255, 255, 255, 1);
   background-color: #000000;
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
-  overflow: hidden;
+}
+
+@media (max-width: 1167px) {
+  body, html {
+    overflow-y: auto;
+  }
 }

@@ -1,5 +1,4 @@
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
 import { useDispatch } from "react-redux";
 import useTheme from "../hooks/useTheme";
 import Select from "react-select";
@@ -8,73 +7,19 @@ import { SET_THEME } from "../redux/actions/themeActions";
 import darkModeIcon from "../assets/darkModeIcon.svg";
 import lightModeIcon from "../assets/lightModeIcon.svg";
 import searchIcon from "../assets/searchIcon.svg";
+import {
+  sortAndSearchStyle,
+  selectWrapperStyle,
+  searchStyle,
+  searchWrapperStyle,
+  searchIconStyle,
+  switchStyle,
+  selectStyles,
+} from "../styles/SortAndSearch.styles";
 
 const SortAndSearch = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
-
-  const sortAndSearchStyle = css({
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingLeft: "20px",
-    paddingRight: "20px",
-    height: "10vh",
-  });
-
-  const selectStyle = css({
-    width: "20%",
-  });
-
-  const searchStyle = css({
-    width: "95%",
-    minHeight: "4.5vh",
-    height: "4.5vh",
-    backgroundColor: theme.backgroundColor,
-    borderRadius: "20px",
-    border: "none",
-    borderColor: "transparent",
-    boxShadow: theme.boxShadow,
-    color: theme.textColor,
-    fontFamily: "inherit",
-    fontSize: "12px",
-    paddingLeft: "30px",
-    paddingRight: "10px",
-    userSelect: "none",
-    "&:focus": {
-      outline: "none",
-      borderColor: "transparent",
-    },
-  });
-
-  const searchWrapperStyle = css({
-    position: "relative",
-    width: "75%",
-  });
-
-  const searchIconStyle = css({
-    position: "absolute",
-    marginLeft: "7px",
-    transform: "translateY(50%)",
-    width: "20px",
-    height: "20px",
-    userSelect: "none",
-  });
-
-  const switchStyle = css({
-    display: "flex",
-    width: "40px",
-    height: "40px",
-    backgroundColor: theme.backgroundColor,
-    borderRadius: "50%",
-    boxShadow: theme.boxShadow,
-    justifyContent: "center",
-    alignItems: "center",
-    color: theme.textColor,
-    cursor: "pointer",
-    userSelect: "none",
-  });
 
   const options = [
     {
@@ -111,11 +56,11 @@ const SortAndSearch = () => {
   type OptionList = { label: string; options: Option[] };
 
   const handleSortChange = (event: Option | OptionList | null) => {
-    // value from the first dropdown
+    // value from the first dropdown if available
     if (event && "value" in event) {
       dispatch({ type: SORT_MOVIES, payload: event.value });
     }
-    // value from the second dropdown
+    // value from the second dropdown if available
     else if (event && "options" in event) {
       dispatch({ type: SORT_MOVIES, payload: event.options[0].value });
     } else if (event === null) {
@@ -142,69 +87,6 @@ const SortAndSearch = () => {
     },
   });
 
-  const selectStyles = {
-    control: (baseStyles: any) => ({
-      ...baseStyles,
-      backgroundColor: theme.backgroundColor,
-      border: "none",
-      borderRadius: "20px",
-      boxShadow: theme.boxShadow,
-      cursor: "pointer",
-      fontSize: "12px",
-      width: "100%",
-      minHeight: "4.5vh",
-      height: "4.5vh",
-      userSelect: "none",
-    }),
-    menu: (baseStyles: any) => ({
-      ...baseStyles,
-      backgroundColor: theme.backgroundColor,
-      border: "none",
-      borderRadius: "20px",
-      boxShadow: theme.oppositeBoxShadow,
-      padding: "7px",
-      width: "100%",
-      minHeight: "50%",
-      
-    }),
-    menuList: (baseStyles: any) => ({
-      ...baseStyles,
-      minHeight: "50%",
-      "::-webkit-scrollbar": {
-        width: "0.6vw",
-      },
-      "::-webkit-scrollbar-track": {
-        display: theme.backgroundColor,
-      },
-      "::-webkit-scrollbar-thumb": {
-        borderRadius: "10px",
-        backgroundColor: "#cccccc",
-      },
-      "&::-webkit-scrollbar-thumb:hover": {
-        backgroundColor: "#555",
-      },
-    }),
-    option: (baseStyles: any, state: any) => ({
-      ...baseStyles,
-      borderRadius: "10px",
-      color: state.isSelected ? theme.oppositeTextColor : theme.textColor,
-      cursor: "pointer",
-      fontSize: "12px",
-      margin: "4px 0",
-    }),
-    group: (baseStyles: any) => ({
-      ...baseStyles,
-      borderRadius: "15px",
-      boxShadow: theme.oppositeBoxShadow,
-      margin: "10px",
-      padding: "5px",
-    }),
-    singleValue: (baseStyles: any) => ({
-      ...baseStyles,
-      color: theme.textColor,
-    }),
-  };
-
   const formatOptionLabel = (data: any, { context }: any) => {
     if (context === "menu") {
       return data.label;
@@ -217,14 +99,14 @@ const SortAndSearch = () => {
 
   return (
     <div css={sortAndSearchStyle}>
-      <div css={selectStyle}>
+      <div css={selectWrapperStyle}>
         <Select
           onChange={handleSortChange}
           options={options}
           placeholder="Sort by..."
           isSearchable={false}
           theme={selectTheme}
-          styles={selectStyles}
+          styles={selectStyles(theme)}
           isClearable={true}
           formatOptionLabel={formatOptionLabel}
         />
@@ -238,7 +120,7 @@ const SortAndSearch = () => {
           onChange={handleSearchChange}
         />
       </div>
-      <div css={switchStyle} onClick={handleThemeChange}>
+      <div css={switchStyle(theme)} onClick={handleThemeChange}>
         <img
           src={theme.isLightMode ? darkModeIcon : lightModeIcon}
           alt={
