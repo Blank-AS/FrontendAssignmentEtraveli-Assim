@@ -1,7 +1,7 @@
 
 ## Star Wars Movie Guide
 
-This project is a web application that allows users to explore the Star Wars movie franchise by displaying a list of movies, their details, and sorting/searching capabilities. The website have a custom light saber modern theme and is fully responsive, providing a seamless experience on phones, tablets, and desktop devices.
+This project is a web application that allows users to explore the Star Wars movie franchise by displaying a list of movies, their details, and sorting/searching capabilities. The website have a custom light saber modern theme and is fully responsive, providing a seamless experience on phones, tablets, and desktop devices. You can access the website at https://frontendassignment-as.netlify.app.
 
 
 ### Features:
