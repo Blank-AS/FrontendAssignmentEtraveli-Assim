@@ -5,8 +5,8 @@ import useTheme from "../hooks/useTheme";
 import { useSelector, useDispatch } from "react-redux";
 import { Movie } from "../types/movieType";
 import { RootState } from "../redux/store/store";
-import toRoman from "../shared/toRoman";
-import StarsRating from "../styles/StarsRating";
+import toRoman from "../utils/toRoman";
+import StarsRating from "../styles/shared/StarsRating";
 import closeIcon from "../assets/closeIcon.svg";
 import {
   movieDetailsStyle,
@@ -21,7 +21,7 @@ import {
   singleRatingStyle,
   closeIconStyle,
   dataStyle,
-} from "../styles/MovieDetails.styles";
+} from "../styles/components/MovieDetails.styles";
 
 const MovieDetails = () => {
   const theme = useTheme();
@@ -37,8 +37,7 @@ const MovieDetails = () => {
     setDetailsKey(detailsKey + 1);
   }, [selectedMovie]);
 
-  const selectedMovieStyle = css(
-    selectedMovieDetailsStyle(theme),{
+  const selectedMovieStyle = css(selectedMovieDetailsStyle(theme), {
     transition: "opacity 0.6s ease-in-out, transform 0.6s ease-in-out",
     opacity: isClosing ? 0 : 1,
     transform: isClosing ? "translateY(50px)" : "translateY(0)",
@@ -78,8 +77,7 @@ const MovieDetails = () => {
           />
           <div css={selectedMovieWrapperStyle}>
             <div css={titleStyle}>
-              Episode {toRoman(selectedMovie.episode_id)} -
-              {selectedMovie.title}
+              Episode {toRoman(selectedMovie.episode_id)} - {selectedMovie.title}
             </div>
             <div css={posterAndOpenningStyle}>
               <img
@@ -143,7 +141,9 @@ const MovieDetails = () => {
           </div>
         </div>
       ) : (
-        <div css={{ color: theme.oppositeTextColor }}> No movie selected </div>
+        <div css={{ color: theme.oppositeTextColor }}>
+          Select a movie to view its details
+        </div>
       )}
     </div>
   );

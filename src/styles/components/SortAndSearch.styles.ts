@@ -44,9 +44,6 @@ export const searchStyle = (theme: any) =>
       outline: "none",
       borderColor: "transparent",
     },
-    "@media (max-width: 1167px)": {
-      width: "calc(100% - 45px)",
-    },
   });
 
 export const searchWrapperStyle = css({

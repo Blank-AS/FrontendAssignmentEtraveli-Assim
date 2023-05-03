@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import starIcon from "../assets/starIcon.svg";
-import fillStarIcon from "../assets/fillStarIcon.svg";
+import starIcon from "../../assets/starIcon.svg";
+import fillStarIcon from "../../assets/fillStarIcon.svg";
 
 const starsRatingStyle = css({
   display: "flex",
@@ -15,6 +15,10 @@ const starsStyle = css({
   height: "15px",
   width: "15px",
   userSelect: "none",
+  "@media (max-width: 767px)": {
+    width: "13px",
+    height: "13px",
+  },
 });
 
 const StarsRating = (props : {preText: string, averageRating: number}) => (

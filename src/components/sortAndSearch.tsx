@@ -15,7 +15,7 @@ import {
   searchIconStyle,
   switchStyle,
   selectStyles,
-} from "../styles/SortAndSearch.styles";
+} from "../styles/components/SortAndSearch.styles";
 
 const SortAndSearch = () => {
   const theme = useTheme();
@@ -89,7 +89,7 @@ const SortAndSearch = () => {
 
   const formatOptionLabel = (data: any, { context }: any) => {
     if (context === "menu") {
-      return data.label;
+      return <div data-testid={`${data.value}`}>{data.label}</div>;
     }
     return `${
       data.value.split("_")[0].charAt(0).toUpperCase() +
@@ -115,7 +115,7 @@ const SortAndSearch = () => {
         <img src={searchIcon} alt="Search" css={searchIconStyle} />
         <input
           id="search"
-          css={searchStyle}
+          css={searchStyle(theme)}
           placeholder="Search for movie title..."
           onChange={handleSearchChange}
         />

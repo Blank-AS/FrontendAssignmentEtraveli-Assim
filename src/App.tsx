@@ -1,12 +1,11 @@
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
 import MoviesList from "./components/MoviesList";
 import MovieDetails from "./components/MovieDetails";
 import SortAndSearch from "./components/SortAndSearch";
 import useTheme from "./hooks/useTheme";
 import { appStyle, parentStyle, separatorStyle } from "./styles/App.styles";
 
-const App = () => {
+const App = ({ testing = false }: { testing?: boolean }) => {
   const theme = useTheme();
 
   return (
@@ -14,7 +13,7 @@ const App = () => {
       <SortAndSearch />
       <hr css={separatorStyle} />
       <div css={parentStyle}>
-        <MoviesList />
+        <MoviesList testing={testing}/>
         <MovieDetails />
       </div>
     </div>
