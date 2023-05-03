@@ -1,11 +1,13 @@
 
 ## Star Wars Movie Guide
 
-This project is a web application that allows users to explore the Star Wars movie franchise by displaying a list of movies, their details, and sorting/searching capabilities.
+This project is a web application that allows users to explore the Star Wars movie franchise by displaying a list of movies, their details, and sorting/searching capabilities. The website have a custom light saber modern theme and is fully responsive, providing a seamless experience on phones, tablets, and desktop devices.
+
 
 ### Features:
 
 - Display a list of Star Wars movies.
+- Fully responsive design for phones, tablets, and desktop devices.
 - Sort movies by episode number, title, release date, or rating.
 - Search movies by their title.
 - View detailed information about each movie, including plot, genre, producer, director, main actors, awards, box office, and duration.
@@ -21,10 +23,11 @@ This project is a web application that allows users to explore the Star Wars mov
 - MovieDetails: Displays detailed information about the selected movie, including plot, genre, producer, director, main actors, awards, box office, and duration, as well as ratings from IMDb, Rotten Tomatoes, and Metacritic.
 - App: The main container component, combining MoviesList, MovieDetails, and SortAndSearch components.
 
+
 ### File Structure
 
 - src/components: Contains the main components: MoviesList, SortAndSearch, and MovieDetails.
-- src/hooks: Contains custom hooks, such as useTheme.
+- src/hooks: Contains custom hooks.
 - src/redux: Contains Redux-related folders/files, such as store, actions, and reducers.
 - src/styles: Contains Emotion styles for components and shared styles.
 - src/types: Contains TypeScript type definitions.
